@@ -41,7 +41,7 @@ function Graph(props: {
     }
   };
 
-  const onPointerLeave = () => {
+  const stopDragging = () => {
     setDragged(null);
     setDraggingGraph(false);
   };
@@ -57,7 +57,8 @@ function Graph(props: {
   return (
     <div
       onPointerDown={onPointerDown}
-      onPointerLeave={onPointerLeave}
+      onPointerLeave={stopDragging}
+      onPointerUp={stopDragging}
       onPointerMove={onPointerMove}
       className="Graph"
     >
