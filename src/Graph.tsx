@@ -2,42 +2,52 @@ import React, { useState } from 'react';
 import { hot } from 'react-hot-loader';
 import Task from './Task';
 import './Graph.css';
+import { Graph as GraphData, Point, Task as TaskData } from './data';
 
-function Graph() {
-  const [graph, setGraph] = useState([
-    {
-      id: 0,
-      name: 'coucou jeannot',
-      pos: { x: 0, y: 0 },
-    },
-    {
-      id: 1,
-      name: 'hector',
-      pos: { x: 0, y: 0 },
-    },
-  ]);
+const moveTask = (task: TaskData, movement: Point) => ({
+  ...task,
+  pos: {
+    x: task.pos.x + movement.x,
+    y: task.pos.y + movement.y,
+  },
+});
 
-  const [dragged, setDragged] = useState(0);
+function Graph(props: {
+  graph: GraphData;
+  setGraph: React.Dispatch<GraphData>;
+}) {
+  const [dragged, setDragged] = useState<number | null>(null);
 
-  const onMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setGraph((graph) =>
-      graph.map((task) =>
+  const onPointerMove = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const newGraph = {
+      tasks: props.graph.tasks.map((task) =>
         task.id == dragged
-          ? {
-              ...task,
-              pos: {
-                x: task.pos.x + event.movementX,
-                y: task.pos.y + event.movementY,
-              },
-            }
+          ? moveTask(task, { x: event.movementX, y: event.movementY })
           : task
-      )
-    );
+      ),
+    };
+    props.setGraph(newGraph);
+  };
+
+  const onPointerLeave = () => setDragged(null);
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement; // TODO why cast
+    if (!target.classList.contains('Task')) return;
+    const id = parseInt(target.dataset.id!);
+    setDragged((dragged) => (dragged == id ? null : id));
   };
 
   return (
-    <div onMouseMove={onMouseMove} className="Graph">
-      {graph.map((task) => (
+    <div
+      onPointerDown={onPointerDown}
+      onPointerLeave={onPointerLeave}
+      onPointerMove={onPointerMove}
+      className="Graph"
+    >
+      {props.graph.tasks.map((task) => (
         <Task key={task.id} task={task} />
       ))}
     </div>
