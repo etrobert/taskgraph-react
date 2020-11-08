@@ -1,6 +1,8 @@
 .Graph {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1em;
+  background: lightblue;
+  overflow: hidden;
+}
+
+.Graph > .container {
+  overflow: visible;
 }

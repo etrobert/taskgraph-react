@@ -17,27 +17,41 @@ function Graph(props: {
   setGraph: React.Dispatch<GraphData>;
 }) {
   const [dragged, setDragged] = useState<number | null>(null);
+  const [draggingGraph, setDraggingGraph] = useState(false);
+
+  const [pan, setPan] = useState({ x: 0, y: 0 });
 
   const onPointerMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    const newGraph = {
-      tasks: props.graph.tasks.map((task) =>
-        task.id == dragged
-          ? moveTask(task, { x: event.movementX, y: event.movementY })
-          : task
-      ),
-    };
-    props.setGraph(newGraph);
+    if (draggingGraph)
+      setPan((pan) => ({
+        x: pan.x + event.movementX,
+        y: pan.y + event.movementY,
+      }));
+    else {
+      const newGraph = {
+        tasks: props.graph.tasks.map((task) =>
+          task.id == dragged
+            ? moveTask(task, { x: event.movementX, y: event.movementY })
+            : task
+        ),
+      };
+      props.setGraph(newGraph);
+    }
   };
 
-  const onPointerLeave = () => setDragged(null);
+  const onPointerLeave = () => {
+    setDragged(null);
+    setDraggingGraph(false);
+  };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement; // TODO why cast
-    if (!target.classList.contains('Task')) return;
-    const id = parseInt(target.dataset.id!);
-    setDragged((dragged) => (dragged == id ? null : id));
+    if (target.classList.contains('Task')) {
+      const id = parseInt(target.dataset.id!);
+      setDragged((dragged) => (dragged == id ? null : id));
+    } else setDraggingGraph(true);
   };
 
   return (
@@ -47,9 +61,14 @@ function Graph(props: {
       onPointerMove={onPointerMove}
       className="Graph"
     >
-      {props.graph.tasks.map((task) => (
-        <Task key={task.id} task={task} />
-      ))}
+      <div
+        className="container"
+        style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
+      >
+        {props.graph.tasks.map((task) => (
+          <Task key={task.id} task={task} />
+        ))}
+      </div>
     </div>
   );
 }
