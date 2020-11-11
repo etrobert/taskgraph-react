@@ -24,12 +24,13 @@ function Graph(props: {
   const onPointerMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    if (draggingGraph)
+    const dragGraph = () => {
       setPan((pan) => ({
         x: pan.x + event.movementX,
         y: pan.y + event.movementY,
       }));
-    else {
+    };
+    const dragTask = () => {
       const newGraph = {
         tasks: props.graph.tasks.map((task) =>
           task.id == dragged
@@ -38,7 +39,9 @@ function Graph(props: {
         ),
       };
       props.setGraph(newGraph);
-    }
+    };
+    if (draggingGraph) dragGraph();
+    else if (dragged !== null) dragTask();
   };
 
   const stopDragging = () => {
