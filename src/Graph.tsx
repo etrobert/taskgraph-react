@@ -70,7 +70,7 @@ function Graph(props: {
         style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
       >
         {props.graph.tasks.map((task) => (
-          <Task key={task.id} task={task} />
+          <Task key={task.id} task={task} dragged={dragged == task.id} />
         ))}
       </div>
     </div>
