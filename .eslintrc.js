@@ -19,4 +19,5 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {},
+  excludedFiles: ['.eslintrc.js', 'webpack.config.js'],
 };
