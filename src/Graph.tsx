@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { hot } from 'react-hot-loader';
 import Task from './Task';
 import './Graph.css';
+import { Dependency, Graph as GraphData, Task as TaskData } from './data';
 import {
   addPoint,
-  Dependency,
-  Graph as GraphData,
   Point,
-  Task as TaskData,
-} from './data';
+  Rect,
+  rectCenter,
+  RectSize,
+  rectSizesEqual,
+} from './geometry';
 
 const moveTask = (task: TaskData, movement: Point) => ({
   ...task,
@@ -38,6 +40,17 @@ function Graph(props: {
 
   const [pan, setPan] = useState({ x: 0, y: 0 });
 
+  // prettier-ignore
+  const [taskSizes, setTaskSizes] = useState<Map<number, RectSize>>(new Map());
+  const setSingleTaskSize = (id: number, size: RectSize) =>
+    setTaskSizes((taskSizes) => {
+      const currentSize = taskSizes.get(id);
+      if (currentSize && rectSizesEqual(currentSize, size)) return taskSizes;
+      const newTaskSizes = new Map(taskSizes);
+      newTaskSizes.set(id, size);
+      return newTaskSizes;
+    });
+
   const onPointerMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -65,23 +78,34 @@ function Graph(props: {
     } else setDraggingGraph(true);
   };
 
-  const renderDependency = (dep: Dependency) => {
+  /**
+   * Returns the Rect corresponding to a Task
+   *
+   * Uses props.graph.tasks to find the Position.
+   * Throws if fails to find the Position.
+   *
+   * Uses taskSizes to get the Size.
+   * Use {w: 0, h: 0} if fails to find the Size
+   * because the task may not have been rendered yet.
+   */
+  function getTaskRect(id: number): Rect {
     const findTask = (id: number) =>
       props.graph.tasks.find((task) => task.id == id);
-    const predecessor = findTask(dep.predecessor);
-    const successor = findTask(dep.successor);
-    if (!predecessor || !successor) {
-      console.error(
-        `Could not find nodes ${dep.predecessor} or ${dep.successor}`
-      );
-      return;
-    }
+    const task = findTask(id);
+    if (!task) throw Error('Cannot find task');
+    const size = taskSizes.get(id) || { w: 0, h: 0 };
+    return { ...task.pos, ...size };
+  }
+
+  const renderDependency = (dep: Dependency) => {
+    const predecessorCenter = rectCenter(getTaskRect(dep.predecessor));
+    const successorCenter = rectCenter(getTaskRect(dep.successor));
     return (
       <path
         key={dep.predecessor + '->' + dep.successor}
         className="arrow"
-        d={`M${predecessor.pos.x},${predecessor.pos.y}
-            L${successor.pos.x},${successor.pos.y}`}
+        d={`M${predecessorCenter.x},${predecessorCenter.y}
+            L${successorCenter.x},${successorCenter.y}`}
       />
     );
   };
@@ -100,7 +124,12 @@ function Graph(props: {
       >
         <svg>{props.graph.dependencies.map(renderDependency)}</svg>
         {props.graph.tasks.map((task) => (
-          <Task key={task.id} task={task} dragged={dragged == task.id} />
+          <Task
+            key={task.id}
+            task={task}
+            dragged={dragged == task.id}
+            updateSize={(size) => setSingleTaskSize(task.id, size)}
+          />
         ))}
       </div>
     </div>
