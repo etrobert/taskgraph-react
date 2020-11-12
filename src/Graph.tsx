@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { hot } from 'react-hot-loader';
 import Task from './Task';
 import './Graph.css';
-import { Graph as GraphData, Point, Task as TaskData } from './data';
+import {
+  Dependency,
+  Graph as GraphData,
+  Point,
+  Task as TaskData,
+} from './data';
 
 const moveTask = (task: TaskData, movement: Point) => ({
   ...task,
@@ -32,6 +37,7 @@ function Graph(props: {
     };
     const dragTask = () => {
       const newGraph = {
+        ...props.graph,
         tasks: props.graph.tasks.map((task) =>
           task.id == dragged
             ? moveTask(task, { x: event.movementX, y: event.movementY })
@@ -57,6 +63,27 @@ function Graph(props: {
     } else setDraggingGraph(true);
   };
 
+  const renderDependency = (dep: Dependency) => {
+    const findTask = (id: number) =>
+      props.graph.tasks.find((task) => task.id == id);
+    const predecessor = findTask(dep.predecessor);
+    const successor = findTask(dep.successor);
+    if (!predecessor || !successor) {
+      console.error(
+        `Could not find nodes ${dep.predecessor} or ${dep.successor}`
+      );
+      return;
+    }
+    return (
+      <path
+        key={dep.predecessor + '->' + dep.successor}
+        className="arrow"
+        d={`M${predecessor.pos.x},${predecessor.pos.y}
+            L${successor.pos.x},${successor.pos.y}`}
+      />
+    );
+  };
+
   return (
     <div
       onPointerDown={onPointerDown}
@@ -69,6 +96,7 @@ function Graph(props: {
         className="container"
         style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
       >
+        <svg>{props.graph.dependencies.map(renderDependency)}</svg>
         {props.graph.tasks.map((task) => (
           <Task key={task.id} task={task} dragged={dragged == task.id} />
         ))}

@@ -5,3 +5,13 @@
 .Graph > .container {
   overflow: visible;
 }
+
+svg {
+  position: absolute;
+  overflow: visible;
+}
+
+.arrow {
+  stroke: black;
+  stroke-width: 6px;
+}

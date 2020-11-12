@@ -9,8 +9,14 @@ interface Task {
   pos: Point;
 }
 
-interface Graph {
-  tasks: Task[];
+interface Dependency {
+  predecessor: number;
+  successor: number;
 }
 
-export { Point, Task, Graph };
+interface Graph {
+  tasks: Task[];
+  dependencies: Dependency[];
+}
+
+export { Point, Task, Dependency, Graph };
