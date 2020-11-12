@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader';
 import Task from './Task';
 import './Graph.css';
 import {
+  addPoint,
   Dependency,
   Graph as GraphData,
   Point,
@@ -17,6 +18,17 @@ const moveTask = (task: TaskData, movement: Point) => ({
   },
 });
 
+const moveTaskInGraph = (
+  graph: GraphData,
+  taskId: number,
+  movement: Point
+) => ({
+  ...graph,
+  tasks: graph.tasks.map((task) =>
+    task.id == taskId ? moveTask(task, movement) : task
+  ),
+});
+
 function Graph(props: {
   graph: GraphData;
   setGraph: React.Dispatch<GraphData>;
@@ -29,25 +41,15 @@ function Graph(props: {
   const onPointerMove = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    const dragGraph = () => {
-      setPan((pan) => ({
-        x: pan.x + event.movementX,
-        y: pan.y + event.movementY,
-      }));
-    };
-    const dragTask = () => {
-      const newGraph = {
-        ...props.graph,
-        tasks: props.graph.tasks.map((task) =>
-          task.id == dragged
-            ? moveTask(task, { x: event.movementX, y: event.movementY })
-            : task
-        ),
-      };
-      props.setGraph(newGraph);
-    };
+    const movement = { x: event.movementX, y: event.movementY };
+
+    const dragGraph = () => setPan((pan) => addPoint(pan, movement));
+
     if (draggingGraph) dragGraph();
-    else if (dragged !== null) dragTask();
+    else if (dragged !== null) {
+      const newGraph = moveTaskInGraph(props.graph, dragged, movement);
+      props.setGraph(newGraph);
+    }
   };
 
   const stopDragging = () => {
