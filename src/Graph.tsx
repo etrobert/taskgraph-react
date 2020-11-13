@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { hot } from 'react-hot-loader';
+
 import Task from './Task';
+import GraphArrows from './GraphArrows';
+
 import './Graph.css';
-import { Dependency, Graph as GraphData, Task as TaskData } from './data';
-import {
-  addPoint,
-  Box,
-  boxesEqual,
-  getBoxCenter,
-  getExpandedBox,
-  intersectLineBox,
-  Point,
-} from './geometry';
+
+import { Graph as GraphData, Task as TaskData } from './data';
+import { addPoint, Box, boxesEqual, Point } from './geometry';
 
 const moveTask = (task: TaskData, movement: Point) => ({
   ...task,
@@ -78,37 +74,6 @@ function Graph(props: {
     } else setDraggingGraph(true);
   };
 
-  const renderDependency = (dep: Dependency) => {
-    const predecessorBox = taskBoxes.get(dep.predecessor);
-    const successorBox = taskBoxes.get(dep.successor);
-    if (!predecessorBox || !successorBox) return null;
-    const predecessorCenter = getBoxCenter(predecessorBox);
-    const successorCenter = getBoxCenter(successorBox);
-
-    const offset = 10;
-    const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
-    const expandedSuccessorBox = getExpandedBox(successorBox, offset);
-
-    const pathPointPredecessor = intersectLineBox(
-      predecessorCenter,
-      successorCenter,
-      expandedPredecessorBox
-    );
-    const pathPointSuccessor = intersectLineBox(
-      predecessorCenter,
-      successorCenter,
-      expandedSuccessorBox
-    );
-    if (!pathPointPredecessor || !pathPointSuccessor) return null;
-    return (
-      <path
-        key={dep.predecessor + '->' + dep.successor}
-        d={`M${pathPointPredecessor.x},${pathPointPredecessor.y}
-            L${pathPointSuccessor.x},${pathPointSuccessor.y}`}
-      />
-    );
-  };
-
   return (
     <div
       onPointerDown={onPointerDown}
@@ -121,9 +86,10 @@ function Graph(props: {
         className="Graph__container"
         style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
       >
-        <svg className="Graph__arrows">
-          {props.graph.dependencies.map(renderDependency)}
-        </svg>
+        <GraphArrows
+          dependencies={props.graph.dependencies}
+          taskBoxes={taskBoxes}
+        />
         {props.graph.tasks.map((task) => (
           <Task
             key={task.id}
