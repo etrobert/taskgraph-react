@@ -27,11 +27,10 @@ function Task({ task, dragged, updateBox }: TaskProps) {
 
   return (
     <div
-      className="Task"
+      className={'Task' + (dragged ? ' Task--dragged' : '')}
       ref={ref}
       style={{
         transform: `translate(${task.pos.x}px, ${task.pos.y}px)`,
-        zIndex: dragged ? 1 : 0,
       }}
       data-id={task.id}
     >
