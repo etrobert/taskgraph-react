@@ -2,16 +2,16 @@
   overflow: hidden;
 }
 
-.Graph > .container {
+.Graph__container {
   overflow: visible;
 }
 
-svg {
+.Graph__arrows {
   position: absolute;
   overflow: visible;
 }
 
-.arrow {
+.Graph__arrows > path {
   stroke: black;
   stroke-width: 6px;
 }

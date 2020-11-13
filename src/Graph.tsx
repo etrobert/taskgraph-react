@@ -103,7 +103,6 @@ function Graph(props: {
     return (
       <path
         key={dep.predecessor + '->' + dep.successor}
-        className="arrow"
         d={`M${predecessorCenter.x},${predecessorCenter.y}
             L${successorCenter.x},${successorCenter.y}`}
       />
@@ -119,10 +118,12 @@ function Graph(props: {
       className="Graph"
     >
       <div
-        className="container"
+        className="Graph__container"
         style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
       >
-        <svg>{props.graph.dependencies.map(renderDependency)}</svg>
+        <svg className="Graph__arrows">
+          {props.graph.dependencies.map(renderDependency)}
+        </svg>
         {props.graph.tasks.map((task) => (
           <Task
             key={task.id}
