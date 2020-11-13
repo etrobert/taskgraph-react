@@ -3,7 +3,14 @@ import { hot } from 'react-hot-loader';
 import Task from './Task';
 import './Graph.css';
 import { Dependency, Graph as GraphData, Task as TaskData } from './data';
-import { addPoint, Box, boxesEqual, getBoxCenter, Point } from './geometry';
+import {
+  addPoint,
+  Box,
+  boxesEqual,
+  getBoxCenter,
+  intersectLineBox,
+  Point,
+} from './geometry';
 
 const moveTask = (task: TaskData, movement: Point) => ({
   ...task,
@@ -76,11 +83,22 @@ function Graph(props: {
     if (!predecessorBox || !successorBox) return null;
     const predecessorCenter = getBoxCenter(predecessorBox);
     const successorCenter = getBoxCenter(successorBox);
+    const pathPointPredecessor = intersectLineBox(
+      predecessorCenter,
+      successorCenter,
+      predecessorBox
+    );
+    const pathPointSuccessor = intersectLineBox(
+      predecessorCenter,
+      successorCenter,
+      successorBox
+    );
+    if (!pathPointPredecessor || !pathPointSuccessor) return null;
     return (
       <path
         key={dep.predecessor + '->' + dep.successor}
-        d={`M${predecessorCenter.x},${predecessorCenter.y}
-            L${successorCenter.x},${successorCenter.y}`}
+        d={`M${pathPointPredecessor.x},${pathPointPredecessor.y}
+            L${pathPointSuccessor.x},${pathPointSuccessor.y}`}
       />
     );
   };
