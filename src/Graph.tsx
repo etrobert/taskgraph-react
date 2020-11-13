@@ -8,6 +8,7 @@ import {
   Box,
   boxesEqual,
   getBoxCenter,
+  getExpandedBox,
   intersectLineBox,
   Point,
 } from './geometry';
@@ -83,15 +84,20 @@ function Graph(props: {
     if (!predecessorBox || !successorBox) return null;
     const predecessorCenter = getBoxCenter(predecessorBox);
     const successorCenter = getBoxCenter(successorBox);
+
+    const offset = 10;
+    const expandedPredecessorBox = getExpandedBox(predecessorBox, offset);
+    const expandedSuccessorBox = getExpandedBox(successorBox, offset);
+
     const pathPointPredecessor = intersectLineBox(
       predecessorCenter,
       successorCenter,
-      predecessorBox
+      expandedPredecessorBox
     );
     const pathPointSuccessor = intersectLineBox(
       predecessorCenter,
       successorCenter,
-      successorBox
+      expandedSuccessorBox
     );
     if (!pathPointPredecessor || !pathPointSuccessor) return null;
     return (

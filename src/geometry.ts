@@ -48,6 +48,17 @@ function boxesEqual(a: Box, b: Box): boolean {
   );
 }
 
+function getExpandedBox(box: Box, offset: number): Box {
+  return {
+    left: box.left - offset,
+    top: box.top - offset,
+    right: box.right + offset,
+    bottom: box.bottom + offset,
+    width: box.width + offset * 2,
+    height: box.height + offset * 2,
+  };
+}
+
 // Finds the intersection point between the line segment p1->p2 and the given bounding box.
 // If the line segment and the box don't intersect, null is returned.
 function intersectLineBox(p1: Point, p2: Point, box: Box): Point | null {
@@ -123,5 +134,6 @@ export {
   boxesEqual,
   createBox,
   getBoxCenter,
+  getExpandedBox,
   intersectLineBox,
 };
