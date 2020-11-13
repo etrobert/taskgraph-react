@@ -1,22 +1,29 @@
 import React, { useEffect, useRef } from 'react';
 import { hot } from 'react-hot-loader';
-import { RectSize } from './geometry';
+import { Box, createBox } from './geometry';
 import { Task as TaskData } from './data';
 import './Task.css';
 
 interface TaskProps {
   task: TaskData;
   dragged: boolean;
-  updateSize: (size: RectSize) => void;
+  updateBox: (box: Box) => void;
 }
 
-function Task({ task, dragged, updateSize }: TaskProps) {
+function Task({ task, dragged, updateBox }: TaskProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const div = ref.current;
-    if (div) updateSize({ w: div.clientWidth, h: div.clientHeight });
-  }, [updateSize]);
+    if (!div) return;
+    const box = createBox({
+      left: task.pos.x,
+      top: task.pos.y,
+      width: div.clientWidth,
+      height: div.clientHeight,
+    });
+    updateBox(box);
+  }, [task.pos.x, task.pos.y, updateBox]);
 
   return (
     <div
