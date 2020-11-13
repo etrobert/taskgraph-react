@@ -1,0 +1,6 @@
+.GraphArrows > path {
+  stroke: black;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  marker-end: url(#GraphArrows__triangle);
+}

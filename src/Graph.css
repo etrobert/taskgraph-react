@@ -6,12 +6,7 @@
   overflow: visible;
 }
 
-.Graph__arrows {
+.Graph__container > .GraphArrows {
   position: absolute;
   overflow: visible;
-}
-
-.Graph__arrows > path {
-  stroke: black;
-  stroke-width: 6px;
 }
