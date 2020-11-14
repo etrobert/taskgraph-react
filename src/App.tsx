@@ -5,7 +5,7 @@ import Graph from './Graph';
 import useGraph from './useGraph';
 
 function App() {
-  const { graph, moveTask } = useGraph({
+  const { graph, moveTask, addTask } = useGraph({
     tasks: [
       {
         id: 0,
@@ -24,6 +24,7 @@ function App() {
   return (
     <div className="App">
       <Graph graph={graph} moveTask={moveTask} />
+      <button onClick={() => addTask('coucou')}>Add</button>
     </div>
   );
 }
