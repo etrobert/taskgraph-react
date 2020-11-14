@@ -6,32 +6,11 @@ import GraphArrows from './GraphArrows';
 
 import './Graph.css';
 
-import { Graph as GraphData, Task as TaskData } from './data';
-import { addPoint, Box, boxesEqual, Point } from './geometry';
+import { Graph as GraphData } from './data';
+import { addPoint, Box, boxesEqual } from './geometry';
+import { MoveTask } from './useGraph';
 
-const moveTask = (task: TaskData, movement: Point) => ({
-  ...task,
-  pos: {
-    x: task.pos.x + movement.x,
-    y: task.pos.y + movement.y,
-  },
-});
-
-const moveTaskInGraph = (
-  graph: GraphData,
-  taskId: number,
-  movement: Point
-) => ({
-  ...graph,
-  tasks: graph.tasks.map((task) =>
-    task.id == taskId ? moveTask(task, movement) : task
-  ),
-});
-
-function Graph(props: {
-  graph: GraphData;
-  setGraph: React.Dispatch<GraphData>;
-}) {
+function Graph(props: { graph: GraphData; moveTask: MoveTask }) {
   const [dragged, setDragged] = useState<number | null>(null);
   const [draggingGraph, setDraggingGraph] = useState(false);
 
@@ -55,10 +34,7 @@ function Graph(props: {
     const dragGraph = () => setPan((pan) => addPoint(pan, movement));
 
     if (draggingGraph) dragGraph();
-    else if (dragged !== null) {
-      const newGraph = moveTaskInGraph(props.graph, dragged, movement);
-      props.setGraph(newGraph);
-    }
+    else if (dragged !== null) props.moveTask(dragged, movement);
   };
 
   const stopDragging = () => {

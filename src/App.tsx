@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader';
 import './App.css';
 import Graph from './Graph';
+import useGraph from './useGraph';
 
 function App() {
-  const [graph, setGraph] = useState({
+  const { graph, moveTask } = useGraph({
     tasks: [
       {
         id: 0,
@@ -22,7 +23,7 @@ function App() {
 
   return (
     <div className="App">
-      <Graph graph={graph} setGraph={setGraph} />
+      <Graph graph={graph} moveTask={moveTask} />
     </div>
   );
 }
