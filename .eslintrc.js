@@ -18,5 +18,8 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', '@typescript-eslint'],
-  rules: {},
+  rules: {
+    'array-callback-return': 'warn',
+    // 'no-shadow': 'warn',
+  },
 };
