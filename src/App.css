@@ -11,12 +11,33 @@ body,
   height: 100%;
 }
 
+html {
+  --dark-background: rgb(31, 30, 30);
+  --light-background: rgb(241, 236, 236);
+
+  --light-low-contrast: rgb(207, 200, 200);
+  --dark-low-contrast: rgb(59, 59, 59);
+
+  --dark-high-contrast: var(--light-background);
+  --light-high-contrast: var(--dark-background);
+
+  --dark-medium-contrast: var(--light-low-contrast);
+  --light-medium-contrast: var(--dark-low-contrast);
+}
+
+html {
+  --background: var(--dark-background);
+  --high-contrast: var(--dark-high-contrast);
+  --low-contrast: var(--dark-low-contrast);
+}
+
 .App {
   display: flex;
   justify-content: center;
   align-items: center;
 
-  background: lightpink;
+  background: var(--background);
+  color: var(--high-contrast);
 }
 
 .App > .Graph {

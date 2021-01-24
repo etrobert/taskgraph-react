@@ -1,5 +1,9 @@
+#GraphArrows__triangle {
+  fill: var(--high-contrast);
+}
+
 .GraphArrows > path {
-  stroke: black;
+  stroke: var(--high-contrast);
   stroke-width: 6px;
   stroke-linecap: round;
   marker-end: url(#GraphArrows__triangle);
