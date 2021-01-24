@@ -5,6 +5,10 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es5",
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   }
 }

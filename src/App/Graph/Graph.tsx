@@ -6,9 +6,9 @@ import GraphArrows from './GraphArrows/GraphArrows';
 
 import './Graph.css';
 
-import { Graph as GraphData } from '../../data';
-import { addPoint, Box, boxesEqual } from '../../geometry';
-import { MoveTask } from '../../useGraph';
+import { Graph as GraphData } from '@/data';
+import { addPoint, Box, boxesEqual } from '@/geometry';
+import { MoveTask } from '@/useGraph';
 
 function Graph(props: { graph: GraphData; moveTask: MoveTask }) {
   const [dragged, setDragged] = useState<number | null>(null);

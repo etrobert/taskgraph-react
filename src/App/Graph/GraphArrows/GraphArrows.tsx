@@ -1,13 +1,13 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 
-import { Dependency } from '../../../data';
+import { Dependency } from '@/data';
 import {
   Box,
   getBoxCenter,
   getExpandedBox,
   intersectLineBox,
-} from '../../../geometry';
+} from '@/geometry';
 import './GraphArrows.css';
 
 function GraphArrows(props: {

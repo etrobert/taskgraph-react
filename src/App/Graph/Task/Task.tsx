@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { hot } from 'react-hot-loader';
-import { Box, createBox } from '../../../geometry';
-import { Task as TaskData } from '../../../data';
+import { Box, createBox } from '@/geometry';
+import { Task as TaskData } from '@/data';
 import './Task.css';
 
 interface TaskProps {
