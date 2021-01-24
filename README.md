@@ -1,5 +1,7 @@
 # React Custom
 
+This project uses Node v15.
+
 ## References
 
 - [Creating a React App… From Scratch.](https://blog.usejournal.com/creating-a-react-app-from-scratch-f3c693b84658)
