@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { hot } from 'react-hot-loader';
 
-import Task from './Task';
-import GraphArrows from './GraphArrows';
+import Task from './Task/Task';
+import GraphArrows from './GraphArrows/GraphArrows';
 
 import './Graph.css';
 
-import { Graph as GraphData } from './data';
-import { addPoint, Box, boxesEqual } from './geometry';
-import { MoveTask } from './useGraph';
+import { Graph as GraphData } from '../../data';
+import { addPoint, Box, boxesEqual } from '../../geometry';
+import { MoveTask } from '../../useGraph';
 
 function Graph(props: { graph: GraphData; moveTask: MoveTask }) {
   const [dragged, setDragged] = useState<number | null>(null);

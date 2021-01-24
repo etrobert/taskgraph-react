@@ -1,8 +1,8 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import './App.css';
-import Graph from './Graph';
-import useGraph from './useGraph';
+import Graph from './Graph/Graph';
+import useGraph from '../useGraph';
 
 function App() {
   const { graph, moveTask, addTask } = useGraph({
