@@ -28,6 +28,7 @@ html {
 html {
   --background: var(--dark-background);
   --high-contrast: var(--dark-high-contrast);
+  --medium-contrast: var(--dark-medium-contrast);
   --low-contrast: var(--dark-low-contrast);
 }
 
