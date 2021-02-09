@@ -31,6 +31,7 @@ function Task({ task, dragged, updateBox }: TaskProps) {
       ref={ref}
       style={{
         transform: `translate(${task.pos.x}px, ${task.pos.y}px)`,
+        color: task.color,
       }}
       data-id={task.id}
     >
