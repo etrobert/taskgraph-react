@@ -12,14 +12,14 @@ interface UseGraph {
 
 const maxId = (graph: Graph) => Math.max(...graph.tasks.map((task) => task.id));
 
-const loadFromLocalStorage = (): Graph | null => {
-  const graphString = window.localStorage.getItem('graph');
-  // TODO validate graphString
-  return graphString && JSON.parse(graphString);
-};
+const serverUrl = 'http://localhost:3001';
 
-const saveToLocalStorage = (graph: Graph) =>
-  window.localStorage.setItem('graph', JSON.stringify(graph));
+const loadGraph = async (id: number) => {
+  const response = await fetch(`${serverUrl}/graph/${id}`);
+  // TODO validate graph
+  // TODO handle HTTP errors
+  return (await response.json()) as Graph;
+};
 
 const defaultInitialGraph = { tasks: [], dependencies: [] };
 
@@ -30,17 +30,21 @@ function useGraph(initialGraph: Graph = defaultInitialGraph): UseGraph {
   const graphNextId = (graph: Graph) => (graph.tasks ? maxId(graph) + 1 : 0);
   const [nextId, setNextId] = useState(graphNextId(initialGraph));
 
-  // Initialize graph with localStorage
+  // Initialize graph
   // TODO fix flash of initialGraph
   useEffect(() => {
-    const graph = loadFromLocalStorage();
-    if (!graph) return;
-    setGraph(graph);
-    setNextId(graphNextId(graph));
+    const initialLoad = async () => {
+      const graph = await loadGraph(1);
+      if (!graph) return;
+      setGraph(graph);
+      setNextId(graphNextId(graph));
+    };
+
+    initialLoad();
   }, []);
 
-  // Update localStorage on every graph modification
-  useEffect(() => saveToLocalStorage(graph), [graph]);
+  // TODO Update on every graph modification
+  // useEffect(() => update(graph), [graph]);
 
   const addTask = (name: string) => {
     setNextId((nextId) => nextId + 1);
